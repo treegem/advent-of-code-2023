@@ -3,14 +3,9 @@
 
 object Day02 {
 
-    private const val MAX_RED = 12
-    private const val MAX_GREEN = 13
-    private const val MAX_BLUE = 14
-
-
     fun part1(input: List<String>) =
         input.map { it.toGame() }
-            .filter { game -> game.showings.all { it.red <= MAX_RED && it.green <= MAX_GREEN && it.blue <= MAX_BLUE } }
+            .filter { game -> game.showings.all { it.red <= 12 && it.green <= 13 && it.blue <= 14 } }
             .sumOf { it.index }
 
     fun part2(input: List<String>) =
