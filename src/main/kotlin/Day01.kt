@@ -1,7 +1,8 @@
+@file:Suppress("MagicNumber")
+
 import Day01.part1
 import Day01.part2
 
-@Suppress("MagicNumber")
 object Day01 {
 
     private val wordsToNumberStrings = mapOf(
@@ -23,21 +24,17 @@ object Day01 {
             .map { it.joinToString(separator = "") }
             .sumOf { it.toInt() }
 
-    fun part2(input: List<String>): Int {
-
-
-        return input.map { line ->
+    fun part2(input: List<String>): Int =
+        input.map { line ->
             listOf(line.findAnyOf(encodingStrings)!!.second, line.findLastAnyOf(encodingStrings)!!.second)
         }
             .map { firstLastPair -> firstLastPair.map { wordsToNumberStrings[it] ?: it } }
             .map { it.joinToString(separator = "") }
             .sumOf { it.toInt() }
-    }
 }
 
 fun main() {
 
-    // test if implementation meets criteria from the description, like:
     val testInputPart1 = readInput("Day01_test_part1")
     check(part1(testInputPart1).also(::println) == 142)
 
