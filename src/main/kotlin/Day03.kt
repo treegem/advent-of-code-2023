@@ -1,5 +1,6 @@
 @file:Suppress("MagicNumber")
 
+
 object Day03 {
 
     fun part1(input: List<String>): Int {
@@ -14,7 +15,19 @@ object Day03 {
             .sumOf { it.value }
     }
 
-    fun part2(input: List<String>): Int = TODO("Must process $input")
+    fun part2(input: List<String>): Int {
+        val asteriskCoordinates = extractAsteriskCoordinates(input)
+        val numberEntries = extractNumberEntries(input)
+        return asteriskCoordinates
+            .map { asteriskCoordinate ->
+                numberEntries.filter { numberEntry -> numberEntry.coordinates.any { it.isAdjacentTo(asteriskCoordinate) } }
+            }
+            .filter { it.size == 2 }
+            .map { numberEntryDublets -> numberEntryDublets.map { it.value } }
+            .fold(0) {acc, numberDublets ->
+                acc + numberDublets.first() * numberDublets.last()
+            }
+    }
 }
 
 private class Coordinate(val row: Int, val column: Int) {
@@ -31,6 +44,17 @@ private fun extractSymbolCoordinates(input: List<String>) =
     input.mapIndexed { row, line ->
         line.mapIndexedNotNull { column, char ->
             if (char.isSymbol()) {
+                Coordinate(row = row, column = column)
+            } else {
+                null
+            }
+        }
+    }.flatten()
+
+private fun extractAsteriskCoordinates(input: List<String>) =
+    input.mapIndexed { row, line ->
+        line.mapIndexedNotNull { column, char ->
+            if (char == '*') {
                 Coordinate(row = row, column = column)
             } else {
                 null
@@ -69,6 +93,7 @@ fun main() {
 
     val testInput = readInput("Day03_test")
     check(Day03.part1(testInput).also(::println) == 4361)
+    check(Day03.part2(testInput).also(::println) == 467835)
 
     val input = readInput("Day03")
     Day03.part1(input).println()
