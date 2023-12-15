@@ -5,7 +5,13 @@ object Day03 {
     fun part1(input: List<String>): Int {
         val symbolCoordinates: List<Coordinate> = extractSymbolCoordinates(input)
         val numberEntries: List<NumberEntry> = extractNumberEntries(input)
-        TODO()
+        return numberEntries
+            .filter { numberEntry ->
+                symbolCoordinates.any { symbolCoordinate ->
+                    numberEntry.coordinates.any { symbolCoordinate.isAdjacentTo(it) }
+                }
+            }
+            .sumOf { it.value }
     }
 
     fun part2(input: List<String>): Int = TODO("Must process $input")
@@ -37,10 +43,10 @@ private fun Char.isSymbol() = !isDigit() && this != '.'
 private fun extractNumberEntries(input: List<String>): List<NumberEntry> {
     val numberEntries: MutableList<NumberEntry> = mutableListOf()
 
-    input.mapIndexed { row, line ->
-        line.forEach { column, char ->
-            var valueString = ""
-            val coordinates = mutableListOf<Coordinate>()
+    input.forEachIndexed { row, line ->
+        var valueString = ""
+        val coordinates = mutableListOf<Coordinate>()
+        line.forEachIndexed { column, char ->
             if (char.isDigit()) {
                 valueString += char
                 coordinates.add(Coordinate(row = row, column = column))
@@ -50,11 +56,11 @@ private fun extractNumberEntries(input: List<String>): List<NumberEntry> {
                 }
                 valueString = ""
                 coordinates.clear()
-                null
             }
-            TODO()
         }
-        TODO()
+        valueString.takeIf { it.isNotBlank() }?.let {
+            numberEntries.add(NumberEntry(it.toInt(), coordinates.toList()))
+        }
     }
     return numberEntries
 }
