@@ -20,11 +20,11 @@ object Day04 {
             val relevantMatchingNumbers = matchingNumbers.subList(0, cardIndex)
             relevantMatchingNumbers
                 .mapIndexed { index, number -> index to number }
-                .filterIndexed { matchIndex, indexedMatchingNumber ->
-                    cardIndex - matchIndex <= indexedMatchingNumber.second
+                .filter { indexedMatchingNumber ->
+                    cardIndex - indexedMatchingNumber.first <= indexedMatchingNumber.second
                 }
                 .forEach {
-                    cardCopies[it.first]
+                    cardCopies[cardIndex] = cardCopies[cardIndex]!! + cardCopies[it.first]!!
                 }
         }
 
