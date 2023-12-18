@@ -17,20 +17,26 @@ object Day04 {
         val cardCopies = List(matchingNumbers.size) { it to 1 }.toMap().toMutableMap()
 
         repeat(matchingNumbers.size) { cardIndex ->
-            val relevantMatchingNumbers = matchingNumbers.subList(0, cardIndex)
-            relevantMatchingNumbers
+            matchingNumbers
+                .subList(0, cardIndex)
                 .mapIndexed { index, number -> index to number }
-                .filter { indexedMatchingNumber ->
-                    cardIndex - indexedMatchingNumber.first <= indexedMatchingNumber.second
-                }
-                .forEach {
-                    cardCopies[cardIndex] = cardCopies[cardIndex]!! + cardCopies[it.first]!!
-                }
+                .filterIfAddsToCurrentCard(cardIndex)
+                .addCopies(cardIndex, cardCopies)
         }
 
         return cardCopies.map { it.value }.sum()
     }
 }
+
+private fun List<Pair<Int, Int>>.filterIfAddsToCurrentCard(cardIndex: Int) =
+    this.filter { indexedMatchingNumber ->
+        cardIndex - indexedMatchingNumber.first <= indexedMatchingNumber.second
+    }
+
+private fun List<Pair<Int, Int>>.addCopies(cardIndex: Int, cardCopies: MutableMap<Int, Int>) =
+    this.forEach {
+        cardCopies[cardIndex] = cardCopies[cardIndex]!! + cardCopies[it.first]!!
+    }
 
 private fun getMatchingNumbersAmount(input: List<String>): List<Int> =
     input
